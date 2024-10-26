@@ -22,17 +22,17 @@ namespace _Scripts.Infrastructure.Factories
             _resolver = resolver;
         }
 
-        public async UniTask CreatePlayer(Vector3 spawnPosition, Vector3 spawnRotation)
+        public async UniTask CreatePlayer(Transform spawnPoint)
         {
             var player = await _loadAssetService
                 .GetAsset<GameObject>(_dataProvider.ObjectsReferences.Player);
             
-            _resolver.Instantiate(player, spawnPosition, Quaternion.LookRotation(spawnRotation));
+            _resolver.Instantiate(player, spawnPoint);
         }
     }
 
     public interface IPlayerFactory
     {
-        UniTask CreatePlayer(Vector3 spawnPosition, Vector3 spawnRotation);
+        UniTask CreatePlayer(Transform spawnPoint);
     }
 }

@@ -1,5 +1,6 @@
-﻿using System;
+﻿using _Scripts.Gameplay.Items;
 using UnityEngine;
+using VContainer;
 
 namespace _Scripts.Gameplay.Grapper
 {
@@ -7,21 +8,31 @@ namespace _Scripts.Gameplay.Grapper
     public class Item : MonoBehaviour
     {
         private Rigidbody _rb;
-        public bool CanGrap { get; private set; }
+        private IItemsContainerDelivered _itemsContainer;
+        
         public bool IsGraped { get; private set; }
         public bool IsDelivered { get; private set; }
 
+        [Inject]
+        private void Inject(IItemsContainer itemsContainer) => 
+            _itemsContainer = itemsContainer;
+
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();
             GetComponent<MeshCollider>().convex = true;
+            _rb = GetComponent<Rigidbody>();
         }
 
-        public void Grap()
+        public bool TryGrap()
         {
+            if (IsGraped || IsDelivered)
+                return false;
+            
             IsGraped = true;
             _rb.isKinematic = true;
             _rb.useGravity = false;
+
+            return true;
         }
 
         public void UnGrap()
@@ -31,10 +42,14 @@ namespace _Scripts.Gameplay.Grapper
             _rb.useGravity = true;
         }
 
-        public void Delivery()
+        public void TryDelivery()
         {
-            CanGrap = false;
+            if (IsDelivered || IsGraped)
+                return;
+            
             IsDelivered = true;
+            IsGraped = false;
+            _itemsContainer.TryAddDeliveredItem(this);
         }
     }
 }

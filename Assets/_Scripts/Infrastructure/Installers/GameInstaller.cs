@@ -4,15 +4,19 @@ using _Scripts.Gameplay.Input;
 using _Scripts.Gameplay.Items;
 using _Scripts.Gameplay.Items.Spawner;
 using _Scripts.Infrastructure.Factories;
+using _Scripts.Infrastructure.Loader;
+using _Scripts.Infrastructure.SpawnContainer;
+using _Scripts.Infrastructure.Win;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace _Scripts.Infrastructure
+namespace _Scripts.Infrastructure.Installers
 {
     public class GameInstaller : LifetimeScope
     {
         [SerializeField] private AllData _allData;
+        [SerializeField] private SpawnPointsContainer _spawnPointContainer;
         
         protected override void Configure(IContainerBuilder builder)
         {
@@ -22,7 +26,9 @@ namespace _Scripts.Infrastructure
             builder.Register<IPlayerFactory, PlayerFactory>(Lifetime.Singleton);
             builder.Register<IItemsContainer, ItemsContainer>(Lifetime.Singleton);
             builder.Register<IItemsSpawner, ItemsSpawner>(Lifetime.Singleton);
+            builder.Register<IWinnerChecker, WinnerChecker>(Lifetime.Singleton);
             builder.Register<IDataProvider, DataProvider>(Lifetime.Singleton).WithParameter(_allData);
+            builder.RegisterInstance((ISpawnPointContainer)_spawnPointContainer);
         }
     }
 }

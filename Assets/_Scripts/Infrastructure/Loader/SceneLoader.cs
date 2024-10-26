@@ -1,4 +1,5 @@
 ﻿using System;
+using _Scripts.Infrastructure.Loader;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -23,10 +24,5 @@ namespace _Scripts.Infrastructure
             if (waitNextScene.IsDone)
                 onLoaded?.Invoke();
         }
-    }
-
-    public interface ISceneLoader
-    {
-        UniTask Load(AssetReference nextScene, Action onLoaded = null);
     }
 }

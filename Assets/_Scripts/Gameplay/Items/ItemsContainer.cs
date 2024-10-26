@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Scripts.Gameplay.Grapper;
 
 namespace _Scripts.Gameplay.Items
@@ -7,7 +8,10 @@ namespace _Scripts.Gameplay.Items
     {
         private readonly List<Item> _items = new ();
         private readonly List<Item> _deliveredItems = new ();
-        
+
+        public event Action DeliveryItem;
+        public event Action AllItemsDelivered;
+
         public void AddItem(Item item) => 
             _items.Add(item);
 
@@ -16,16 +20,14 @@ namespace _Scripts.Gameplay.Items
             if (!_items.Contains(item))
                 return;
             
-            if (item.IsGraped)
-                return;
-
             if (!item.IsDelivered)
                 return;
             
+            DeliveryItem?.Invoke();
             _deliveredItems.Add(item);
-        }
 
-        public bool CheckDeliveredItems() => 
-            _items.Count == _deliveredItems.Count;
+            if (_items.Count == _deliveredItems.Count)
+                AllItemsDelivered?.Invoke();
+        }
     }
 }

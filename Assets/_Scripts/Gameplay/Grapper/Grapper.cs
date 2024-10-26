@@ -47,11 +47,11 @@ namespace _Scripts.Gameplay.Grapper
             if (!Physics.Raycast(ray, out RaycastHit hit, 10))
                 return;
             
-            if (!hit.collider.TryGetComponent(out Item grapLabel))
+            if (!hit.collider.TryGetComponent(out Item item))
                 return;
-            
-            _currentObject = grapLabel;
-            _currentObject.Grap();
+
+            if (item.TryGrap()) 
+                _currentObject = item;
         }
     }
 }
